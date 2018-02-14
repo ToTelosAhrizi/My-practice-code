@@ -1,0 +1,7 @@
+C:\Users\HarperD7\source\repos\Scratchpad1\Scratchpad1\bin\Debug\Scratchpad1.exe.config
+C:\Users\HarperD7\source\repos\Scratchpad1\Scratchpad1\bin\Debug\Scratchpad1.exe
+C:\Users\HarperD7\source\repos\Scratchpad1\Scratchpad1\bin\Debug\Scratchpad1.pdb
+C:\Users\HarperD7\source\repos\Scratchpad1\Scratchpad1\obj\Debug\Scratchpad1.csprojResolveAssemblyReference.cache
+C:\Users\HarperD7\source\repos\Scratchpad1\Scratchpad1\obj\Debug\Scratchpad1.csproj.CoreCompileInputs.cache
+C:\Users\HarperD7\source\repos\Scratchpad1\Scratchpad1\obj\Debug\Scratchpad1.exe
+C:\Users\HarperD7\source\repos\Scratchpad1\Scratchpad1\obj\Debug\Scratchpad1.pdb
