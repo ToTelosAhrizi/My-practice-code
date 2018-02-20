@@ -5,3 +5,10 @@ C:\Users\HarperD7\source\repos\ScratchPad3\ScratchPad3\obj\Debug\ScratchPad3.csp
 C:\Users\HarperD7\source\repos\ScratchPad3\ScratchPad3\obj\Debug\ScratchPad3.csproj.CoreCompileInputs.cache
 C:\Users\HarperD7\source\repos\ScratchPad3\ScratchPad3\obj\Debug\ScratchPad3.exe
 C:\Users\HarperD7\source\repos\ScratchPad3\ScratchPad3\obj\Debug\ScratchPad3.pdb
+C:\Users\HarperD7\Source\Repos\My-practice-code\ScratchPad3\ScratchPad3\bin\Debug\ScratchPad3.exe.config
+C:\Users\HarperD7\Source\Repos\My-practice-code\ScratchPad3\ScratchPad3\bin\Debug\ScratchPad3.exe
+C:\Users\HarperD7\Source\Repos\My-practice-code\ScratchPad3\ScratchPad3\bin\Debug\ScratchPad3.pdb
+C:\Users\HarperD7\Source\Repos\My-practice-code\ScratchPad3\ScratchPad3\obj\Debug\ScratchPad3.csprojResolveAssemblyReference.cache
+C:\Users\HarperD7\Source\Repos\My-practice-code\ScratchPad3\ScratchPad3\obj\Debug\ScratchPad3.csproj.CoreCompileInputs.cache
+C:\Users\HarperD7\Source\Repos\My-practice-code\ScratchPad3\ScratchPad3\obj\Debug\ScratchPad3.exe
+C:\Users\HarperD7\Source\Repos\My-practice-code\ScratchPad3\ScratchPad3\obj\Debug\ScratchPad3.pdb
