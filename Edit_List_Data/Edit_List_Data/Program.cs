@@ -29,7 +29,7 @@ namespace Changing_List_Data
                     x++;
                     start++;
                 }
-                string p = string.Join("\n", practice.ToArray());//converts the list to a human readable string for display
+                string p = string.Join("\n", practice.ToArray());//adds list to an array and converts the list to a human readable string for display
                 WriteLine(p);//displaying the values of the practice array
                 WriteLine("\nWhat entry would you like to change");//ask what item in the list they want to change
                 int.TryParse(ReadLine(), out int change);//reads what item in the list the user wants to change
@@ -38,10 +38,10 @@ namespace Changing_List_Data
                 if (ctype == 1)//what to do to the user selected item in the list if they chose delete the seleced item
                 {
                     WriteLine(practice[change] + "\n");//shows what item was selected
-                    practice.RemoveAt(change);                    
-                    string l = string.Join("\n", practice.ToArray());
+                    practice.RemoveAt(change);         // deletes selected item
+                    string l = string.Join("\n", practice.ToArray());//creates a new array with updated info and converts it to a string for human readability
                     WriteLine("\n");
-                    WriteLine(l);
+                    WriteLine(l);//displays the converted array
                     WriteLine("GoodBye!");
                     ReadKey();
                 }
@@ -51,11 +51,11 @@ namespace Changing_List_Data
                     WriteLine("Change to?");//Ask the user what they want value they want to change the selected item to
                     int.TryParse(ReadLine(), out int u_change);//Reads what to change the selected items value to
                     practice.Insert(change, u_change);//Adds the user input item to the list
-                    int del_change = change + 1;
+                    int del_change = change + 1;//finds the new postion for the selected input
                     practice.RemoveAt(del_change);//removes the user selected value from the list                    
-                    string l = string.Join("\n", practice.ToArray());//
+                    string l = string.Join("\n", practice.ToArray());//creates a new array with updated info and converts it to a string for human readability
                     WriteLine("\n");
-                    WriteLine(l);
+                    WriteLine(l);//displays the converted array
                     WriteLine("GoodBye!");
                     ReadKey();
                 }
@@ -63,21 +63,21 @@ namespace Changing_List_Data
                 {
                     WriteLine(practice[change] + "\n");//shows what item was selected
                     WriteLine("Enter addition to list.");
-                    int.TryParse(ReadLine(), out int u_change);
-                    practice.Insert(change + 1, u_change);
-                    string l = string.Join("\n", practice.ToArray());
+                    int.TryParse(ReadLine(), out int u_change);//Reads what value the user wants to add to the list
+                    practice.Insert(change + 1, u_change);//find where in the list to add the users input and inputs it into the list
+                    string l = string.Join("\n", practice.ToArray());//creates a new array with updated info and converts it to a string for human readability
                     WriteLine("\n");
-                    WriteLine(l);
+                    WriteLine(l);//displays the converted array
                     WriteLine("GoodBye!");
                     ReadKey();
                 }
-                else
+                else//what to do if the user doesnt input a valid entry to change the list
                 {
                     WriteLine("GoodBye!");
                     ReadKey();
                 }
             }
-            else
+            else// what to do if the user doesnt provide a valid entry for the number of entries in the list
             {
                 WriteLine("GoodBye!");
                 ReadKey();
