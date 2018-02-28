@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0FC5A419-5C92-46D4-AACF-3B8845E8E96D}</ProjectGuid>
+    <ProjectGuid>{DE9A30E0-46C5-4D56-9B27-4E7BC9F6A25A}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Edit_Files_Pracice</RootNamespace>
-    <AssemblyName>Edit_Files_Pracice</AssemblyName>
+    <RootNamespace>Edit_List_Data</RootNamespace>
+    <AssemblyName>Edit_List_Data</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
