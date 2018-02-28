@@ -1,150 +1,173 @@
 ﻿using System;
-using System.IO;
+
 using System.Collections.Generic;
+
 using System.Linq;
+
 using System.Text;
+
 using System.Threading.Tasks;
+
 using static System.Console;
 
-namespace Edit_Files_Pracice
-{
+
+
+namespace Changing_List_Data
+
+{/// <summary>
+
+    /// This program will allow the user to input data into a list. Once input they will be allowed to edit the list by deleting one item, change the value of one
+
+    /// item, or adding one item to a specific point in the list.
+
+    /// </summary>
+
     class Program
+
     {
+
         static void Main(string[] args)
+
         {
-            string run = "yes";
-            while (run != "no")
+
+            List<int> practice = new List<int>();//first a new list is created and named practice
+
+            practice.Add(0);//list start at zero, so as to not to confuse the user the start point of the list is set to zero
+
+            int start = 1;//All list must have at least one entry so we are setting this
+
+            int x = 1;//x will be the variable being added to the list. It gets its first value here
+
+            WriteLine("How many entries?(Enter a valid (whole, positive) number. Non Valid entries will close.)");
+
+            if (int.TryParse(ReadLine(), out int entries))// this tells the progam what to do if the user enters a valid number of how many items to add to the list.
+
             {
-                UserInfo one = new UserInfo();
-                WriteLine("Hello and welcome to the change record console\n\nFor a new Input type Input," +
-                          " to veiw a record type View, to edit a record type Edit, to close type Close or Exit");
-                string choice = ReadLine();
-                if (choice == "Input" || choice == "input")
+
+                /*will add x to the list, raise the value of x and raise the value of start. Will loop this action 
+
+                 * until start is equal to the number of entries the user input*/
+
+                while (start <= entries)
+
                 {
-                    one.UserInput();
-                    run = "yes";
+
+                    practice.Add(x);
+
+                    x++;
+
+                    start++;
+
                 }
-                else if (choice == "View" || choice == "view")
+
+                string p = string.Join("\n", practice.ToArray());//converts the list to a human readable string for display
+
+                WriteLine(p);//displaying the values of the practice array
+
+                WriteLine("\nWhat entry would you like to change");//ask what item in the list they want to change
+
+                int.TryParse(ReadLine(), out int change);//reads what item in the list the user wants to change
+
+                WriteLine("\nPress 1 to delete, 2 to update, 3 to add an entry. All else will close.");//ask the user what they want to do to that item in the list
+
+                int.TryParse(ReadLine(), out int ctype);//reads what the user wants to do to the selected item in the list
+
+                if (ctype == 1)//what to do to the user selected item in the list if they chose delete the seleced item
+
                 {
-                    one.UserOutput();
-                    run = "yes";
-                }
-                else if (choice == "Edit" || choice == "edit")
-                {
-                    one.UserEdit();
-                    run = "yes";
-                }
-                else if (choice == "Close" || choice == "close" || choice == "Exit" || choice == "exit")
-                {
-                    WriteLine("Goodybye! (Hit enter to close.)");
+
+                    WriteLine(practice[change] + "\n");//shows what item was selected
+
+                    practice.RemoveAt(change);
+
+                    string l = string.Join("\n", practice.ToArray());
+
+                    WriteLine("\n");
+
+                    WriteLine(l);
+
+                    WriteLine("GoodBye!");
+
                     ReadKey();
-                    run = "no";
+
                 }
+
+                else if (ctype == 2)//what to do to the user selected item in the list if they chose change the selected items value
+
+                {
+
+                    WriteLine(practice[change] + "\n");//shows what item was selected
+
+                    WriteLine("Change to?");//Ask the user what they want value they want to change the selected item to
+
+                    int.TryParse(ReadLine(), out int u_change);//Reads what to change the selected items value to
+
+                    practice.Insert(change, u_change);//Adds the user input item to the list
+
+                    int del_change = change + 1;
+
+                    practice.RemoveAt(del_change);//removes the user selected value from the list                    
+
+                    string l = string.Join("\n", practice.ToArray());//
+
+                    WriteLine("\n");
+
+                    WriteLine(l);
+
+                    WriteLine("GoodBye!");
+
+                    ReadKey();
+
+                }
+
+                else if (ctype == 3)//what to do to the user selected item in the list if they chose to add an item to the list after the selected item.
+
+                {
+
+                    WriteLine(practice[change] + "\n");//shows what item was selected
+
+                    WriteLine("Enter addition to list.");
+
+                    int.TryParse(ReadLine(), out int u_change);
+
+                    practice.Insert(change + 1, u_change);
+
+                    string l = string.Join("\n", practice.ToArray());
+
+                    WriteLine("\n");
+
+                    WriteLine(l);
+
+                    WriteLine("GoodBye!");
+
+                    ReadKey();
+
+                }
+
                 else
+
                 {
-                    WriteLine("Non valid entry, try again");
+
+                    WriteLine("GoodBye!");
+
                     ReadKey();
-                    run = "yes";
+
                 }
-            }
-        }
-    }
-    class UserInfo
-    {
-        string info;
-        string name;        
-        string rev;
-        string change;
-        string line;
-        public void UserInput()
-        {            
-            WriteLine("Name of change coordnator:");
-            name = ReadLine();
 
-            WriteLine("Revision number (enter 0 if original):");
-            rev = ReadLine();
-            int.TryParse(rev, out int revision);
+            }
 
-            WriteLine("How many lines needed to write the change?");
-            line = ReadLine();
-            int.TryParse(line, out int lines);
-            int startl = 1;
-            List<string> changes = new List<string>();
-            WriteLine("Enter you changes, make sure you have enough lines to enter");
-            while (startl <= lines)
-            {
-                Write(startl + ". ");
-                changes.Add(ReadLine());
-                startl++;
-            }
-            change = string.Join("\n", changes.ToArray());
-            FileInfo f = new FileInfo(@"C:\Users\HarperD7\Desktop\name_" + name + "_v_" + revision + ".txt");
-            StreamWriter w = f.CreateText();
-            string[] infotxt = {"\nInformation listed below.\n\n" ,
-                "Name of change coordnator:       " + name,
-                "Revision Number:                 " + revision,
-                "The changes:                   \n" + change
-            };
-            info = string.Join("\n", infotxt.ToArray());
-            w.WriteLine(info);
-            w.Close();
-            WriteLine("Success! Hit enter to return to menu.");
-            ReadKey();
-        }
-        public void UserOutput()
-        {
-            WriteLine("Whose notes do you want to see? Enter their name:");
-            name = ReadLine();
-            WriteLine("What revision do you want to see?");
-            rev = ReadLine();
-            int.TryParse(rev, out int revision);
-            StreamReader s = File.OpenText(@"C:\Users\HarperD7\Desktop\name_" + name + "_v_" + revision + ".txt");
-            string read;
-            while((read = s.ReadLine()) != null)
-            {
-                WriteLine(read);
-            }
-            s.Close();
-            WriteLine("Success! Hit enter to return to menu.");
-            ReadKey();
-        }
-        public void UserEdit()
-        {
-            WriteLine("Whose notes do you want to change? Enter their name:");
-            name = ReadLine();
-            WriteLine("What revision do you want to change?");
-            rev = ReadLine();
-            int.TryParse(rev, out int revision);
-            WriteLine("How many lines needed to write the change?");
-            line = ReadLine();
-            int.TryParse(line, out int lines);
-            int startl = 1;
-            List<string> changes = new List<string>();
-            WriteLine("Enter your name:");
-            string namet = ReadLine();
-            WriteLine("Enter you changes, make sure you have enough lines to enter");
-            while (startl <= lines)
-            {
-                Write(startl + ". ");
-                changes.Add(ReadLine());
-                startl++;
-            }
-            change = string.Join("\n", changes.ToArray());
-            int revt = revision+1;
-            FileInfo f = new FileInfo(@"C:\Users\HarperD7\Desktop\name_" + name + "_v_" + revision + "_revisedby_" + namet + "_revision_" + revt + ".txt");
-            StreamWriter w = f.CreateText();
-            string[] infotxt = {"\nInformation listed below.\n\n" ,
-                "Name of change coordnator:       " + name,
-                "Revision Number:                 " + revision,
-                "The changes:                   \n" + change
-            };
-            info = string.Join("\n", infotxt.ToArray());
-            w.WriteLine(info);
-            w.Close();
-            WriteLine("Success! Hit enter to return to menu.");
-            ReadKey();
-        }
+            else
 
+            {
+
+                WriteLine("GoodBye!");
+
+                ReadKey();
+
+            }
+
+        }
 
     }
+
 }

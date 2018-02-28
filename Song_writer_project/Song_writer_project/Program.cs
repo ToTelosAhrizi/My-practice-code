@@ -85,7 +85,7 @@ namespace Song_writer_project
                 "The Lyrics:                     \n"+lyrics
             };
 
-            System.IO.File.WriteAllLines(@"C:\Users\HarperD7\Desktop\Song_" + song +"_v_"+ version + ".txt", infotxt);
+            System.IO.File.WriteAllLines(@"C:\Users\Jay\Desktop\Song_" + song +"_v_"+ version + ".txt", infotxt);
             string infop = ("Success! Press enter!");
             return infop;
         }
@@ -97,8 +97,8 @@ namespace Song_writer_project
             WriteLine("What version do you want to see?");
             ver = ReadLine();
             int.TryParse(ver, out version);
-            string checking = @"C:\Users\HarperD7\Desktop\Song_" + song + "_v_" + version + ".txt";
-            return (File.Exists(checking) ? System.IO.File.ReadAllText(@"C:\Users\HarperD7\Desktop\Song_" + song + "_v_" + version + ".txt")
+            string checking = @"C:\Users\Jay\Desktop\Song_" + song + "_v_" + version + ".txt";
+            return (File.Exists(checking) ? System.IO.File.ReadAllText(@"C:\Users\Jay\Desktop\Song_" + song + "_v_" + version + ".txt")
                 : "File does not exist. Press Enter to try again.");
         }
     }
