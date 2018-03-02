@@ -10,11 +10,11 @@ namespace ScratchPad4
 {
     class Program
     {
-        
+
         static void Main(string[] args)
         {
             string again = "yes";
-            while (again !="no" && again !="No" && again != "NO" && again != "nO" && again != "n" && again != "N")
+            while (again != "no" && again != "No" && again != "NO" && again != "nO" && again != "n" && again != "N")
             {
                 WriteLine("Type 1 to create a new note, 2 to read a note, or 3 to edit a note.");
                 string choice = ReadLine();
@@ -41,7 +41,7 @@ namespace ScratchPad4
                     again = ReadLine();
                 }
             }
-            
+
         }
 
         public static void CreateInfo()
@@ -72,8 +72,8 @@ namespace ScratchPad4
             string StNotes = string.Join("\n", notes.ToArray());
             string[] noteList = { StNotes };
             string username = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            System.IO.File.WriteAllLines(username+@"\Desktop\Notes on " + notename + ".doc", noteList);
-            System.IO.File.WriteAllLines(username+@"\Desktop\Notes on " + notename + ".csv", noteList);
+            System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".doc", noteList);
+            System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".csv", noteList);
 
         }
         public static void ReadInfo()
@@ -83,7 +83,7 @@ namespace ScratchPad4
             string notename = ReadLine();
             string checkingdoc = username + @"\Desktop\Notes on " + notename + ".doc";
             string checkingcsv = username + @"\Desktop\Notes on " + notename + ".csv";
-            if (File.Exists(checkingdoc)&& File.Exists(checkingcsv))                
+            if (File.Exists(checkingdoc) && File.Exists(checkingcsv))
             {
                 Write(System.IO.File.ReadAllText(username + @"\Desktop\Notes on " + notename + ".doc"));
             }
@@ -112,10 +112,10 @@ namespace ScratchPad4
             List<string> notes = new List<string>();
             WriteLine("What's the name of the file?\n");
             string notename = ReadLine();
-            
+
             if (File.Exists(username + @"\Desktop\Notes on " + notename + ".doc") && File.Exists(username + @"\Desktop\Notes on " + notename + ".csv"))
             {
-                string [] mylist = System.IO.File.ReadAllLines(username + @"\Desktop\Notes on " + notename + ".doc");                
+                string[] mylist = System.IO.File.ReadAllLines(username + @"\Desktop\Notes on " + notename + ".doc");
                 string listed = string.Join("\n", mylist.ToArray());
                 Write("\n" + listed + "\n");
                 notes.AddRange(mylist);
@@ -278,7 +278,7 @@ namespace ScratchPad4
             {
                 WriteLine("Does not exist");
             }
-           
+
 
 
         }
