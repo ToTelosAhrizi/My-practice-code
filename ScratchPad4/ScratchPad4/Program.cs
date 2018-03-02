@@ -9,8 +9,7 @@ using static System.Console;
 namespace ScratchPad4
 {
     class Program
-    {
-        
+    {        
         static void Main(string[] args)
         {
             string again = "yes";
@@ -40,10 +39,8 @@ namespace ScratchPad4
                     WriteLine("Non valid entry, again?");
                     again = ReadLine();
                 }
-            }
-            
+            }            
         }
-
         public static void CreateInfo()
         {
             string note = "";
@@ -52,7 +49,6 @@ namespace ScratchPad4
             WriteLine("Write your notes, type XXX to finish");
             while (note != "XXX")
             {
-
                 int index = (n);
                 Write(n + ". ");
                 note = ReadLine();
@@ -65,37 +61,35 @@ namespace ScratchPad4
                 {
                     WriteLine("Ok, all done!\n");
                 }
-
             }
             WriteLine("What do you want to name these notes?");
             string notename = ReadLine();
             string StNotes = string.Join("\n", notes.ToArray());
             string[] noteList = { StNotes };
             string username = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            System.IO.File.WriteAllLines(username+@"\Desktop\Notes on " + notename + ".doc", noteList);
-            System.IO.File.WriteAllLines(username+@"\Desktop\Notes on " + notename + ".csv", noteList);
-
+            System.IO.File.WriteAllLines(username+ @"\Desktop\ " + notename + ".txt", noteList);
+            System.IO.File.WriteAllLines(username+@"\Desktop\ " + notename + ".csv", noteList);
         }
         public static void ReadInfo()
         {
             string username = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             WriteLine("What's the name of the file?");
             string notename = ReadLine();
-            string checkingdoc = username + @"\Desktop\Notes on " + notename + ".doc";
-            string checkingcsv = username + @"\Desktop\Notes on " + notename + ".csv";
-            if (File.Exists(checkingdoc)&& File.Exists(checkingcsv))                
+            string checkingtxt = username + @"\Desktop\ " + notename + ".txt";
+            string checkingcsv = username + @"\Desktop\ " + notename + ".csv";
+            if (File.Exists(checkingtxt)&& File.Exists(checkingcsv))                
             {
-                Write(System.IO.File.ReadAllText(username + @"\Desktop\Notes on " + notename + ".doc"));
+                Write(System.IO.File.ReadAllText(username + @"\Desktop\ " + notename + ".txt"));
             }
-            else if (File.Exists(checkingdoc) && !File.Exists(checkingcsv))
+            else if (File.Exists(checkingtxt) && !File.Exists(checkingcsv))
             {
-                Write(System.IO.File.ReadAllText(username + @"\Desktop\Notes on " + notename + ".doc"));
+                Write(System.IO.File.ReadAllText(username + @"\Desktop\ " + notename + ".txt"));
             }
-            else if (!File.Exists(checkingdoc) && File.Exists(checkingcsv))
+            else if (!File.Exists(checkingtxt) && File.Exists(checkingcsv))
             {
-                Write(System.IO.File.ReadAllText(username + @"\Desktop\Notes on " + notename + ".csv"));
+                Write(System.IO.File.ReadAllText(username + @"\Desktop\ " + notename + ".csv"));
             }
-            else if (!File.Exists(checkingdoc) && !File.Exists(checkingcsv))
+            else if (!File.Exists(checkingtxt) && !File.Exists(checkingcsv))
             {
                 WriteLine("Sorry file not found");
             }
@@ -103,7 +97,6 @@ namespace ScratchPad4
             {
                 WriteLine("Sorry file not found");
             }
-
             ReadKey();
         }
         public static void EditInfo()
@@ -111,11 +104,10 @@ namespace ScratchPad4
             string username = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             List<string> notes = new List<string>();
             WriteLine("What's the name of the file?\n");
-            string notename = ReadLine();
-            
-            if (File.Exists(username + @"\Desktop\Notes on " + notename + ".doc") && File.Exists(username + @"\Desktop\Notes on " + notename + ".csv"))
+            string notename = ReadLine();            
+            if (File.Exists(username + @"\Desktop\ " + notename + ".txt") && File.Exists(username + @"\Desktop\ " + notename + ".csv"))
             {
-                string [] mylist = System.IO.File.ReadAllLines(username + @"\Desktop\Notes on " + notename + ".doc");                
+                string [] mylist = System.IO.File.ReadAllLines(username + @"\Desktop\ " + notename + ".txt");                
                 string listed = string.Join("\n", mylist.ToArray());
                 Write("\n" + listed + "\n");
                 notes.AddRange(mylist);
@@ -130,8 +122,8 @@ namespace ScratchPad4
                     Write("\n" + nlist);
                     string StNotes = string.Join("\n", notes.ToArray());
                     string[] noteList = { StNotes };
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".doc", noteList);
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".csv", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".txt", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".csv", noteList);
                     ReadKey();
                 }
                 else if (change == 2)
@@ -142,8 +134,8 @@ namespace ScratchPad4
                     Write("\n" + nlist);
                     string StNotes = string.Join("\n", notes.ToArray());
                     string[] noteList = { StNotes };
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".doc", noteList);
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".csv", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".txt", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".csv", noteList);
                     ReadKey();
                 }
                 else if (change == 3)
@@ -155,21 +147,18 @@ namespace ScratchPad4
                     Write("\n" + nlist);
                     string StNotes = string.Join("\n", notes.ToArray());
                     string[] noteList = { StNotes };
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".doc", noteList);
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".csv", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".txt", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".csv", noteList);
                     ReadKey();
                 }
                 else
                 {
                     WriteLine("Non Valid");
                 }
-
-
-
             }
-            else if (File.Exists(username + @"\Desktop\Notes on " + notename + ".doc") && !File.Exists(username + @"\Desktop\Notes on " + notename + ".csv"))
+            else if (File.Exists(username + @"\Desktop\ " + notename + ".txt") && !File.Exists(username + @"\Desktop\ " + notename + ".csv"))
             {
-                string[] mylist = System.IO.File.ReadAllLines(username + @"\Desktop\Notes on " + notename + ".doc");
+                string[] mylist = System.IO.File.ReadAllLines(username + @"\Desktop\ " + notename + ".txt");
                 string listed = string.Join("\n", mylist.ToArray());
                 Write("\n" + listed + "\n");
                 notes.AddRange(mylist);
@@ -184,8 +173,8 @@ namespace ScratchPad4
                     Write("\n" + nlist);
                     string StNotes = string.Join("\n", notes.ToArray());
                     string[] noteList = { StNotes };
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".doc", noteList);
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".csv", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".txt", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".csv", noteList);
                     ReadKey();
                 }
                 else if (change == 2)
@@ -196,8 +185,8 @@ namespace ScratchPad4
                     Write("\n" + nlist);
                     string StNotes = string.Join("\n", notes.ToArray());
                     string[] noteList = { StNotes };
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".doc", noteList);
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".csv", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".txt", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".csv", noteList);
                     ReadKey();
                 }
                 else if (change == 3)
@@ -209,8 +198,8 @@ namespace ScratchPad4
                     Write("\n" + nlist);
                     string StNotes = string.Join("\n", notes.ToArray());
                     string[] noteList = { StNotes };
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".doc", noteList);
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".csv", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".txt", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".csv", noteList);
                     ReadKey();
                 }
                 else
@@ -218,9 +207,9 @@ namespace ScratchPad4
                     WriteLine("Non Valid");
                 }
             }
-            else if (!File.Exists(username + @"\Desktop\Notes on " + notename + ".doc") && File.Exists(username + @"\Desktop\Notes on " + notename + ".csv"))
+            else if (!File.Exists(username + @"\Desktop\ " + notename + ".txt") && File.Exists(username + @"\Desktop\ " + notename + ".csv"))
             {
-                string[] mylist = System.IO.File.ReadAllLines(username + @"\Desktop\Notes on " + notename + ".csv");
+                string[] mylist = System.IO.File.ReadAllLines(username + @"\Desktop\ " + notename + ".csv");
                 string listed = string.Join("\n", mylist.ToArray());
                 Write("\n" + listed + "\n");
                 notes.AddRange(mylist);
@@ -235,8 +224,8 @@ namespace ScratchPad4
                     Write("\n" + nlist);
                     string StNotes = string.Join("\n", notes.ToArray());
                     string[] noteList = { StNotes };
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".doc", noteList);
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".csv", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".txt", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".csv", noteList);
                     ReadKey();
                 }
                 else if (change == 2)
@@ -247,8 +236,8 @@ namespace ScratchPad4
                     Write("\n" + nlist);
                     string StNotes = string.Join("\n", notes.ToArray());
                     string[] noteList = { StNotes };
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".doc", noteList);
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".csv", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".txt", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".csv", noteList);
                     ReadKey();
                 }
                 else if (change == 3)
@@ -260,27 +249,23 @@ namespace ScratchPad4
                     Write("\n" + nlist);
                     string StNotes = string.Join("\n", notes.ToArray());
                     string[] noteList = { StNotes };
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".doc", noteList);
-                    System.IO.File.WriteAllLines(username + @"\Desktop\Notes on " + notename + ".csv", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".txt", noteList);
+                    System.IO.File.WriteAllLines(username + @"\Desktop\ " + notename + ".csv", noteList);
                     ReadKey();
                 }
                 else
                 {
                     WriteLine("Non Valid");
                 }
-
             }
-            else if (!File.Exists(username + @"\Desktop\Notes on " + notename + ".doc") && !File.Exists(username + @"\Desktop\Notes on " + notename + ".csv"))
+            else if (!File.Exists(username + @"\Desktop\ " + notename + ".txt") && !File.Exists(username + @"\Desktop\ " + notename + ".csv"))
             {
                 WriteLine("Does not exist");
             }
             else
             {
                 WriteLine("Does not exist");
-            }
-           
-
-
+            }                  
         }
     }
 }
