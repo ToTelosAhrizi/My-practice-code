@@ -46,15 +46,15 @@ namespace Buildingdatab
                 WriteLine(Path.GetFileNameWithoutExtension(item) + " percentage is " + per.ToString("P"));
                 doc.Add(Path.GetFileNameWithoutExtension(item) + " percentage is " + per.ToString("P"));
             }
-            WriteLine("Type the one you want to tag as closed(add .txt)");
-            string cho = ReadLine();
+            WriteLine("Type the ones you want to tag as closed. Separate by comma");
+            string[] cho = ReadLine().Split(',');
             foreach (string item in Notes)
             {
                 string[] files = Directory.GetFiles(item);
                 foreach (string file in files)
                 {
                    
-                    if (Path.GetFileNameWithoutExtension(file)==cho)
+                    if (cho.Contains(Path.GetFileNameWithoutExtension(file)))
                     {
                         string newname =(Path.GetFullPath(file).Replace(".txt", ""));
                         File.Copy(file,newname+" done.txt");
