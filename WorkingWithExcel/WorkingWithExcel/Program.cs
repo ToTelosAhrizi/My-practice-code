@@ -310,7 +310,7 @@ namespace ConsoleApp2
                 chart2.Legend.Remove();
                 chart2.SetPosition((tagged*3+1), 0, 6, 0);
 
-                FileInfo excelFile = new FileInfo(@"C:\Users\HarperD7\Documents\H.T I.R Aide\Notes\testbook.xlsx");
+                FileInfo excelFile = new FileInfo(username + @"\Documents\H.T I.R Aide\Notes\testbook.xlsx");
                 excel.SaveAs(excelFile);
             }
         }
