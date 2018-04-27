@@ -46,7 +46,7 @@ namespace ConsoleApp2
                             else
                             {
                                 string checkclosed = File.ReadAllText(file);
-                                if (checkclosed.ToLower().Contains("closed succesfully"))
+                                if (checkclosed.ToLower().Contains("closed successfully"))
                                 {
                                     string newname = (Path.GetFullPath(file).Replace(".txt", ""));
                                     string newfile = newname + " tagged done";
@@ -93,7 +93,7 @@ namespace ConsoleApp2
                             else
                             {
                                 string checkclosed = File.ReadAllText(file);
-                                if (checkclosed.ToLower().Contains("closed succesfully") && !file.Contains("tagged done"))
+                                if (checkclosed.ToLower().Contains("closed successfully") && !file.Contains("tagged done"))
                                 {
                                     string newname = (Path.GetFullPath(file).Replace(".txt", ""));
                                     string newfile = newname + " tagged done";
@@ -129,7 +129,7 @@ namespace ConsoleApp2
                             {
                                 hi.Add(line);
                             }
-                            hi.Add("closed succesfully");
+                            hi.Add("closed successfully");
                             File.WriteAllLines(file, hi);
                         }
                     }
@@ -148,7 +148,7 @@ namespace ConsoleApp2
 
                 var headerSheet2 = new List<string[]>()
                 {
-                    new string[] { "Offense Type", "Offense Number", "Tag","Day Started","Last Edited"  }
+                    new string[] { "Offense Type", "Offense Number", "Remedy INC","Tag","Day Started","Last Edited","Process Time (In Hours)"  }
                 };
 
                 var cellData = new List<object[]>()
@@ -184,8 +184,10 @@ namespace ConsoleApp2
                     }
                 }
                 int tagged = 1;
+                
                 foreach (string item in Notes)
-                {                    
+                {
+                    
                     if (item.Contains("Qradar Tracking") || item.Contains("Remedy INC Info"))
                     {
                         item.Skip(1);
@@ -194,26 +196,27 @@ namespace ConsoleApp2
                     {
                         tagged++;
                         double typefiles = 0;
-                        double taggedfiles = 0;
+                        int taggedfiles = 0;
                         object name = Path.GetFileNameWithoutExtension(item);
                         object[] files = Directory.GetFiles(item);
+                        
                         foreach (string offense in files)
                         {
                             if (offense.Contains("Format"))
                             {
                                 offense.Skip(1);
-                            }
-                            else if (offense.Contains("closed succesfully".ToLower()))
-                            {
-                                taggedfiles++;
-                                typefiles++;
-                            }
+                            }                            
                             else
-                            {
+                            {                                
                                 typefiles++;
+                                string tagcheck = File.ReadAllText(offense);
+                                if (tagcheck.Contains("closed successfully"))
+                                {
+                                    taggedfiles++;
+                                }
                             }
                         }
-                        cellData.Add(new object[] { name, typefiles, (typefiles / totalfiles).ToString("P"),taggedfiles});                       
+                        cellData.Add(new object[] { name, typefiles, (typefiles / totalfiles).ToString("P"), taggedfiles });
                     }
                     
                 }
@@ -237,16 +240,21 @@ namespace ConsoleApp2
                             }
                             else
                             {
-                                string checkclosed = File.ReadAllText(file);
-                                if (checkclosed.ToLower().Contains("closed succesfully"))
+                                
+                                List<string> checkclosed = new List<string>(File.ReadAllLines(file));                                
+                                IEnumerable<string> inc = checkclosed.Where(i=>i.Length==15&&i.Contains("INC"));                               
+                                if (checkclosed.Contains("y, closed successfully"))
                                 {
                                     string newname = (Path.GetFullPath(file).Replace(".txt", ""));
                                     string tag = "Closed";
                                     DateTime createdate = File.GetCreationTime(file);
                                     DateTime editdate = File.GetLastWriteTime(file);
-                                    string bd = createdate.ToString("MM.dd.yy");
-                                    string ed = createdate.ToString("MM.dd.yy");
-                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), tag, bd, ed });
+                                    string bd = createdate.ToString("MM/dd/yy");
+                                    string ed = editdate.ToString("MM/dd/yy");
+                                    TimeSpan time = (editdate - createdate);
+                                    string t = time.TotalHours.ToString("##.##");
+                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), inc, tag, bd, ed, t });
+                                    
 
 
 
@@ -257,9 +265,13 @@ namespace ConsoleApp2
                                     string tag = "Open";
                                     DateTime createdate = File.GetCreationTime(file);
                                     DateTime editdate = File.GetLastWriteTime(file);
-                                    string bd = createdate.ToString("MM.dd.yy");
-                                    string ed = createdate.ToString("MM.dd.yy");
-                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), tag ,bd,ed});
+                                    string bd = createdate.ToString("MM/dd/yy");
+                                    string ed = editdate.ToString("MM/dd/yy");
+                                    TimeSpan time = (editdate - createdate);
+                                    string t = "Still Working";
+                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), inc, tag, bd, ed, t });
+
+
                                 }
                             }                            
 
@@ -294,7 +306,8 @@ namespace ConsoleApp2
                 
                 chart2.Border.Fill.Color = System.Drawing.Color.Green;
                 chart2.SetSize(tagged*22);
-                chart2.Title.Text = "Closed Offenses";                
+                chart2.Title.Text = "Closed Offenses";
+                chart2.Legend.Remove();
                 chart2.SetPosition((tagged*3+1), 0, 6, 0);
 
                 FileInfo excelFile = new FileInfo(@"C:\Users\HarperD7\Documents\H.T I.R Aide\Notes\testbook.xlsx");
