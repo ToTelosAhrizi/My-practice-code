@@ -139,8 +139,8 @@ namespace ConsoleApp2
             }
             using (ExcelPackage excel = new ExcelPackage())
             {
-                excel.Workbook.Worksheets.Add("Worksheet1");
-                excel.Workbook.Worksheets.Add("Worksheet2");
+                excel.Workbook.Worksheets.Add("Overview");
+                excel.Workbook.Worksheets.Add("Details");
                 var headerRow = new List<string[]>()
                 {
                     new string[] { "Offense Type", "Total Notes", "Percent of Notes","Number tagged as Closed"}
@@ -268,13 +268,13 @@ namespace ConsoleApp2
                     }
 
                 }
-                var excelWorksheet1 = excel.Workbook.Worksheets["Worksheet1"];
+                var excelWorksheet1 = excel.Workbook.Worksheets["Overview"];
                 excelWorksheet1.Cells[headerRange].Style.Font.Bold = true;
                 excelWorksheet1.Cells[headerRange].Style.Font.Size = 14;
                 excelWorksheet1.Cells[headerRange].LoadFromArrays(headerRow);
                 excelWorksheet1.Cells[2, 1].LoadFromArrays(cellData);
 
-                var excelWorksheet2 = excel.Workbook.Worksheets["Worksheet2"];
+                var excelWorksheet2 = excel.Workbook.Worksheets["Details"];
                 excelWorksheet2.Cells[headerRange].Style.Font.Bold = true;
                 excelWorksheet2.Cells[headerRange].Style.Font.Size = 14;
                 excelWorksheet2.Cells[headerRange].LoadFromArrays(headerSheet2);
