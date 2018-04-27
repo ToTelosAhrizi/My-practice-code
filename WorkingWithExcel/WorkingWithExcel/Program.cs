@@ -62,6 +62,7 @@ namespace ConsoleApp2
                                     totalfiles++;
                                     filetype++;
                                 }
+
                             }
                         }
                         WriteLine("Total: " + filetype);
@@ -138,15 +139,27 @@ namespace ConsoleApp2
             }
             using (ExcelPackage excel = new ExcelPackage())
             {
-                excel.Workbook.Worksheets.Add("Worksheet1");                             
+                excel.Workbook.Worksheets.Add("Worksheet1");
+                excel.Workbook.Worksheets.Add("Worksheet2");
                 var headerRow = new List<string[]>()
                 {
-                    new string[] { "Offense Type", "Total Notes", "Percent of Notes","Number tagged as Closed" }
+                    new string[] { "Offense Type", "Total Notes", "Percent of Notes","Number tagged as Closed"}
                 };
+
+                var headerSheet2 = new List<string[]>()
+                {
+                    new string[] { "Offense Type", "Offense Number", "Tag","Day Started","Last Edited"  }
+                };
+
                 var cellData = new List<object[]>()
                 {
                 };
-                string headerRange = "A1:" + Char.ConvertFromUtf32(headerRow[0].Length + 64) + "1";
+
+                var sheet2Data = new List<object[]>()
+                {
+                };
+
+                string headerRange = "A1:Z1";
                 totalfiles = 0;
                 foreach (string item in Notes)
                 {
@@ -170,14 +183,16 @@ namespace ConsoleApp2
                         }
                     }
                 }
+                int tagged = 1;
                 foreach (string item in Notes)
-                {
+                {                    
                     if (item.Contains("Qradar Tracking") || item.Contains("Remedy INC Info"))
                     {
                         item.Skip(1);
                     }
                     else
                     {
+                        tagged++;
                         double typefiles = 0;
                         double taggedfiles = 0;
                         object name = Path.GetFileNameWithoutExtension(item);
@@ -198,8 +213,60 @@ namespace ConsoleApp2
                                 typefiles++;
                             }
                         }
-                        cellData.Add(new object[] { name, typefiles, (typefiles / totalfiles).ToString("P"),taggedfiles});
+                        cellData.Add(new object[] { name, typefiles, (typefiles / totalfiles).ToString("P"),taggedfiles});                       
                     }
+                    
+                }
+                foreach (string item in Notes)
+                {
+                    if (item.Contains("Qradar Tracking") || item.Contains("Remedy INC Info"))
+                    {
+                        item.Skip(1);
+                    }
+                    else
+                    {
+                        
+                        
+                        object name = Path.GetFileNameWithoutExtension(item);
+                        object[] files = Directory.GetFiles(item);
+                        foreach (string file in files)
+                        {
+                            if (file.Contains("Format"))
+                            {
+                                file.Skip(1);
+                            }
+                            else
+                            {
+                                string checkclosed = File.ReadAllText(file);
+                                if (checkclosed.ToLower().Contains("closed succesfully"))
+                                {
+                                    string newname = (Path.GetFullPath(file).Replace(".txt", ""));
+                                    string tag = "Closed";
+                                    DateTime createdate = File.GetCreationTime(file);
+                                    DateTime editdate = File.GetLastWriteTime(file);
+                                    string bd = createdate.ToString("MM.dd.yy");
+                                    string ed = createdate.ToString("MM.dd.yy");
+                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), tag, bd, ed });
+
+
+
+                                }
+                                else
+                                {
+                                    string newname = (Path.GetFullPath(file).Replace(".txt", ""));
+                                    string tag = "Open";
+                                    DateTime createdate = File.GetCreationTime(file);
+                                    DateTime editdate = File.GetLastWriteTime(file);
+                                    string bd = createdate.ToString("MM.dd.yy");
+                                    string ed = createdate.ToString("MM.dd.yy");
+                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), tag ,bd,ed});
+                                }
+                            }                            
+
+                        }
+                        
+                    }
+
                 }
                 var excelWorksheet1 = excel.Workbook.Worksheets["Worksheet1"];
                 excelWorksheet1.Cells[headerRange].Style.Font.Bold = true;
@@ -207,29 +274,32 @@ namespace ConsoleApp2
                 excelWorksheet1.Cells[headerRange].LoadFromArrays(headerRow);
                 excelWorksheet1.Cells[2, 1].LoadFromArrays(cellData);
 
-                var myChart = excelWorksheet1.Drawings.AddChart("chart", OfficeOpenXml.Drawing.Chart.eChartType.Pie);
-                var chart2 = excelWorksheet1.Drawings.AddChart("chart2", OfficeOpenXml.Drawing.Chart.eChartType.Pie);
+                var excelWorksheet2 = excel.Workbook.Worksheets["Worksheet2"];
+                excelWorksheet2.Cells[headerRange].Style.Font.Bold = true;
+                excelWorksheet2.Cells[headerRange].Style.Font.Size = 14;
+                excelWorksheet2.Cells[headerRange].LoadFromArrays(headerSheet2);
+                excelWorksheet2.Cells[2, 1].LoadFromArrays(sheet2Data);
 
-                var series = myChart.Series.Add("B2:B100", "A2: A100");
-                var series2 = chart2.Series.Add("D2:D100", "A2: A100");
+                var myChart = excelWorksheet1.Drawings.AddChart("chart", OfficeOpenXml.Drawing.Chart.eChartType.Pie);
+                var chart2 = excelWorksheet1.Drawings.AddChart("chart2", OfficeOpenXml.Drawing.Chart.eChartType.ColumnStacked);
+
+                var series = myChart.Series.Add("B2:B" + tagged, "A2: A" + tagged);
+                var series2 = chart2.Series.Add("D2:D" + tagged, "A2: A" + tagged);
 
                 myChart.Border.Fill.Color = System.Drawing.Color.Green;
                 myChart.Title.Text = "Break Down of Current Types";
-                myChart.SetSize(400, 400);
+                myChart.SetSize(tagged * 22);
                 myChart.SetPosition(1, 0, 6, 0);
-
+                
+                
                 chart2.Border.Fill.Color = System.Drawing.Color.Green;
-                chart2.Title.Text = "Closed Offenses";
-                chart2.SetSize(400, 400);
-                chart2.SetPosition(1, 0, 15, 25);
+                chart2.SetSize(tagged*22);
+                chart2.Title.Text = "Closed Offenses";                
+                chart2.SetPosition((tagged*3+1), 0, 6, 0);
 
                 FileInfo excelFile = new FileInfo(@"C:\Users\HarperD7\Documents\H.T I.R Aide\Notes\testbook.xlsx");
                 excel.SaveAs(excelFile);
             }
-            File.WriteAllLines(username + @"\Documents\H.T I.R Aide\Notes\testing.txt", doc);           
-            
-            
         }
-        
     }
 }
