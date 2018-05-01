@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using Excel = Microsoft.Office.Interop.Excel;
-
 using OfficeOpenXml;
 
 namespace ConsoleApp2
@@ -46,7 +44,7 @@ namespace ConsoleApp2
                             else
                             {
                                 string checkclosed = File.ReadAllText(file);
-                                if (checkclosed.ToLower().Contains("closed successfully"))
+                                if (checkclosed.ToLower().Contains("y, closed successfully"))
                                 {
                                     string newname = (Path.GetFullPath(file).Replace(".txt", ""));
                                     string newfile = newname + " tagged done";
@@ -93,7 +91,7 @@ namespace ConsoleApp2
                             else
                             {
                                 string checkclosed = File.ReadAllText(file);
-                                if (checkclosed.ToLower().Contains("closed successfully") && !file.Contains("tagged done"))
+                                if (checkclosed.ToLower().Contains("y, closed successfully") && !file.Contains("tagged done"))
                                 {
                                     string newname = (Path.GetFullPath(file).Replace(".txt", ""));
                                     string newfile = newname + " tagged done";
@@ -129,7 +127,7 @@ namespace ConsoleApp2
                             {
                                 hi.Add(line);
                             }
-                            hi.Add("closed successfully");
+                            hi.Add("y, closed successfully");
                             File.WriteAllLines(file, hi);
                         }
                     }
@@ -210,7 +208,7 @@ namespace ConsoleApp2
                             {                                
                                 typefiles++;
                                 string tagcheck = File.ReadAllText(offense);
-                                if (tagcheck.Contains("closed successfully"))
+                                if (tagcheck.Contains("y, closed successfully"))
                                 {
                                     taggedfiles++;
                                 }
