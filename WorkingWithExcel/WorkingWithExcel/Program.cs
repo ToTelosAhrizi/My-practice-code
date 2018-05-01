@@ -46,7 +46,7 @@ namespace ConsoleApp2
                             else
                             {
                                 string checkclosed = File.ReadAllText(file);
-                                if (checkclosed.ToLower().Contains("closed successfully"))
+                                if (checkclosed.ToLower().Contains("y, closed successfully"))
                                 {
                                     string newname = (Path.GetFullPath(file).Replace(".txt", ""));
                                     string newfile = newname + " tagged done";
@@ -93,7 +93,7 @@ namespace ConsoleApp2
                             else
                             {
                                 string checkclosed = File.ReadAllText(file);
-                                if (checkclosed.ToLower().Contains("closed successfully") && !file.Contains("tagged done"))
+                                if (checkclosed.ToLower().Contains("y, closed successfully") && !file.Contains("tagged done"))
                                 {
                                     string newname = (Path.GetFullPath(file).Replace(".txt", ""));
                                     string newfile = newname + " tagged done";
@@ -129,7 +129,7 @@ namespace ConsoleApp2
                             {
                                 hi.Add(line);
                             }
-                            hi.Add("closed successfully");
+                            hi.Add("y, closed successfully");
                             File.WriteAllLines(file, hi);
                         }
                     }
@@ -210,7 +210,7 @@ namespace ConsoleApp2
                             {                                
                                 typefiles++;
                                 string tagcheck = File.ReadAllText(offense);
-                                if (tagcheck.Contains("closed successfully"))
+                                if (tagcheck.Contains("y, closed successfully"))
                                 {
                                     taggedfiles++;
                                 }
@@ -280,17 +280,42 @@ namespace ConsoleApp2
                     }
 
                 }
+                
                 var excelWorksheet1 = excel.Workbook.Worksheets["Overview"];
                 excelWorksheet1.Cells[headerRange].Style.Font.Bold = true;
                 excelWorksheet1.Cells[headerRange].Style.Font.Size = 14;
                 excelWorksheet1.Cells[headerRange].LoadFromArrays(headerRow);
                 excelWorksheet1.Cells[2, 1].LoadFromArrays(cellData);
-
+                int tagging = 1;
                 var excelWorksheet2 = excel.Workbook.Worksheets["Details"];
-                excelWorksheet2.Cells[headerRange].Style.Font.Bold = true;
-                excelWorksheet2.Cells[headerRange].Style.Font.Size = 14;
-                excelWorksheet2.Cells[headerRange].LoadFromArrays(headerSheet2);
-                excelWorksheet2.Cells[2, 1].LoadFromArrays(sheet2Data);
+                foreach (var item in sheet2Data)
+                {
+                    tagging++;
+                    if (item.Contains("Closed"))
+                    {                         
+                        string closeRange = "A" + tagging + ":" + "Z" +tagging;
+                        excelWorksheet2.Cells[headerRange].Style.Font.Bold = true;
+                        excelWorksheet2.Cells[headerRange].Style.Font.Size = 14;
+
+
+                        excelWorksheet2.Cells[closeRange].Style.Font.Bold = true;
+                        excelWorksheet2.Cells[closeRange].Style.Font.UnderLine = true;
+                        excelWorksheet2.Cells[closeRange].Style.Font.Color.SetColor(System.Drawing.Color.LimeGreen);
+                        excelWorksheet2.Cells[headerRange].LoadFromArrays(headerSheet2);
+                        excelWorksheet2.Cells[2, 1].LoadFromArrays(sheet2Data);
+                    }
+                    else
+                    {
+                        string closeRange = "A" + tagging + ":" + "Z" + tagging;
+                        excelWorksheet2.Cells[headerRange].Style.Font.Bold = true;
+                        excelWorksheet2.Cells[headerRange].Style.Font.Size = 14;
+                        excelWorksheet2.Cells[headerRange].LoadFromArrays(headerSheet2);
+                        excelWorksheet2.Cells[2, 1].LoadFromArrays(sheet2Data);
+                    }
+                }
+                
+                
+                
 
                 var myChart = excelWorksheet1.Drawings.AddChart("chart", OfficeOpenXml.Drawing.Chart.eChartType.Pie);
                 var chart2 = excelWorksheet1.Drawings.AddChart("chart2", OfficeOpenXml.Drawing.Chart.eChartType.ColumnStacked);
