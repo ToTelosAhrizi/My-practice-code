@@ -278,17 +278,42 @@ namespace ConsoleApp2
                     }
 
                 }
+                
                 var excelWorksheet1 = excel.Workbook.Worksheets["Overview"];
                 excelWorksheet1.Cells[headerRange].Style.Font.Bold = true;
                 excelWorksheet1.Cells[headerRange].Style.Font.Size = 14;
                 excelWorksheet1.Cells[headerRange].LoadFromArrays(headerRow);
                 excelWorksheet1.Cells[2, 1].LoadFromArrays(cellData);
-
+                int tagging = 1;
                 var excelWorksheet2 = excel.Workbook.Worksheets["Details"];
-                excelWorksheet2.Cells[headerRange].Style.Font.Bold = true;
-                excelWorksheet2.Cells[headerRange].Style.Font.Size = 14;
-                excelWorksheet2.Cells[headerRange].LoadFromArrays(headerSheet2);
-                excelWorksheet2.Cells[2, 1].LoadFromArrays(sheet2Data);
+                foreach (var item in sheet2Data)
+                {
+                    tagging++;
+                    if (item.Contains("Closed"))
+                    {                         
+                        string closeRange = "A" + tagging + ":" + "Z" +tagging;
+                        excelWorksheet2.Cells[headerRange].Style.Font.Bold = true;
+                        excelWorksheet2.Cells[headerRange].Style.Font.Size = 14;
+
+
+                        excelWorksheet2.Cells[closeRange].Style.Font.Bold = true;
+                        excelWorksheet2.Cells[closeRange].Style.Font.UnderLine = true;
+                        excelWorksheet2.Cells[closeRange].Style.Font.Color.SetColor(System.Drawing.Color.LimeGreen);
+                        excelWorksheet2.Cells[headerRange].LoadFromArrays(headerSheet2);
+                        excelWorksheet2.Cells[2, 1].LoadFromArrays(sheet2Data);
+                    }
+                    else
+                    {
+                        string closeRange = "A" + tagging + ":" + "Z" + tagging;
+                        excelWorksheet2.Cells[headerRange].Style.Font.Bold = true;
+                        excelWorksheet2.Cells[headerRange].Style.Font.Size = 14;
+                        excelWorksheet2.Cells[headerRange].LoadFromArrays(headerSheet2);
+                        excelWorksheet2.Cells[2, 1].LoadFromArrays(sheet2Data);
+                    }
+                }
+                
+                
+                
 
                 var myChart = excelWorksheet1.Drawings.AddChart("chart", OfficeOpenXml.Drawing.Chart.eChartType.Pie);
                 var chart2 = excelWorksheet1.Drawings.AddChart("chart2", OfficeOpenXml.Drawing.Chart.eChartType.ColumnStacked);
