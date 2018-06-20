@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using OfficeOpenXml;
+using OfficeOpenXml.Table;
+using OfficeOpenXml.Style;
+
 
 namespace ConsoleApp2
 {
@@ -127,7 +130,16 @@ namespace ConsoleApp2
                             {
                                 hi.Add(line);
                             }
-                            hi.Add("y, closed successfully");
+                            IEnumerable<string> inc = hi.Where(i => i.Length == 15 && i.Contains("INC"));
+                            if (inc.Contains("INC")&&inc.Count()==15)
+                            {
+                                hi.Add("y, closed successfully");
+                            }
+                            else
+                            {
+                                hi.Add("y, moved to level 2 or inactive");
+                            }
+                            
                             File.WriteAllLines(file, hi);
                         }
                     }
@@ -139,6 +151,8 @@ namespace ConsoleApp2
             {
                 excel.Workbook.Worksheets.Add("Overview");
                 excel.Workbook.Worksheets.Add("Details");
+                excel.Workbook.Worksheets.Add("30 Days");
+                excel.Workbook.Worksheets.Add("30 Days Detailed");
                 var headerRow = new List<string[]>()
                 {
                     new string[] { "Offense Type", "Total Notes", "Percent of Notes","Number tagged as Closed"}
@@ -146,7 +160,7 @@ namespace ConsoleApp2
 
                 var headerSheet2 = new List<string[]>()
                 {
-                    new string[] { "Offense Type", "Offense Number", "Remedy INC","Tag","Day Started","Last Edited","Process Time (In Hours)"  }
+                    new string[] { "Offense Type", "Offense Number", "Remedy INC","Tag","Day Started","Last Edited","Process Time (In Hours)", "Process Time (In Days)" }
                 };
 
                 var cellData = new List<object[]>()
@@ -154,6 +168,10 @@ namespace ConsoleApp2
                 };
 
                 var sheet2Data = new List<object[]>()
+                {
+                };
+
+                var sheet3Data = new List<object[]>()
                 {
                 };
 
@@ -197,7 +215,8 @@ namespace ConsoleApp2
                         int taggedfiles = 0;
                         object name = Path.GetFileNameWithoutExtension(item);
                         object[] files = Directory.GetFiles(item);
-                        
+                        string createcheck;
+                        DateTime editcheck;
                         foreach (string offense in files)
                         {
                             if (offense.Contains("Format"))
@@ -205,16 +224,26 @@ namespace ConsoleApp2
                                 offense.Skip(1);
                             }                            
                             else
-                            {                                
+                            {
+                                string datn = DateTime.Now.ToString();
+                                int.TryParse(datn, out int dtn);
+                                createcheck = File.GetCreationTime(offense).ToString();
+                                int.TryParse(createcheck, out int ch);
+                                editcheck = File.GetLastWriteTime(offense);
                                 typefiles++;
                                 string tagcheck = File.ReadAllText(offense);
-                                if (tagcheck.Contains("y, closed successfully"))
+                                if (tagcheck.Contains("y, closed successfully")|| tagcheck.Contains("y, moved to level 2"))
                                 {
                                     taggedfiles++;
+                                }
+                                if (ch <= dtn + 15)
+                                {
+                                    sheet3Data.Add(new object[] { name, typefiles, (typefiles / totalfiles).ToString("P"), taggedfiles }); ;
                                 }
                             }
                         }
                         cellData.Add(new object[] { name, typefiles, (typefiles / totalfiles).ToString("P"), taggedfiles });
+                        
                     }
                     
                 }
@@ -241,7 +270,7 @@ namespace ConsoleApp2
                                 
                                 List<string> checkclosed = new List<string>(File.ReadAllLines(file));                                
                                 IEnumerable<string> inc = checkclosed.Where(i=>i.Length==15&&i.Contains("INC"));                               
-                                if (checkclosed.Contains("y, closed successfully"))
+                                if (checkclosed.Contains("y, closed successfully")|| checkclosed.Contains("y, moved to level 2 or inactive"))
                                 {
                                     string newname = (Path.GetFullPath(file).Replace(".txt", ""));
                                     string tag = "Closed";
@@ -250,8 +279,17 @@ namespace ConsoleApp2
                                     string bd = createdate.ToString("MM/dd/yy");
                                     string ed = editdate.ToString("MM/dd/yy");
                                     TimeSpan time = (editdate - createdate);
+                                    int days;
+                                    if (time.TotalHours > 24)
+                                    {
+                                        days = time.Days;
+                                    }
+                                    else
+                                    {
+                                        days = 1;
+                                    }
                                     string t = time.TotalHours.ToString("##.##");
-                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), inc, tag, bd, ed, t });
+                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), inc, tag, bd, ed, t,days });
                                     
 
 
@@ -266,8 +304,18 @@ namespace ConsoleApp2
                                     string bd = createdate.ToString("MM/dd/yy");
                                     string ed = editdate.ToString("MM/dd/yy");
                                     TimeSpan time = (editdate - createdate);
-                                    string t = "Still Working";
-                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), inc, tag, bd, ed, t });
+                                    int days;
+                                    if (time.TotalHours>24)
+                                    {
+                                        days = time.Days;
+                                    }
+                                    else
+                                    {
+                                        days = 1;
+                                    }
+                                    
+                                    string t = (time.TotalHours.ToString("##.##")+" - Still Working");
+                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), inc, tag, bd, ed, t,days });
 
 
                                 }
@@ -286,6 +334,15 @@ namespace ConsoleApp2
                 excelWorksheet1.Cells[2, 1].LoadFromArrays(cellData);
                 int tagging = 1;
                 var excelWorksheet2 = excel.Workbook.Worksheets["Details"];
+
+                var excelWorksheet3 = excel.Workbook.Worksheets["30 Days"];
+                excelWorksheet3.Cells[headerRange].Style.Font.Bold = true;
+                excelWorksheet3.Cells[headerRange].Style.Font.Size = 14;
+                excelWorksheet3.Cells[headerRange].LoadFromArrays(headerRow);
+                excelWorksheet3.Cells[2, 1].LoadFromArrays(cellData);
+
+                var excelWorksheet4 = excel.Workbook.Worksheets["30 Days Detailed"];
+
                 foreach (var item in sheet2Data)
                 {
                     tagging++;
@@ -310,32 +367,54 @@ namespace ConsoleApp2
                         excelWorksheet2.Cells[headerRange].LoadFromArrays(headerSheet2);
                         excelWorksheet2.Cells[2, 1].LoadFromArrays(sheet2Data);
                     }
+                   
                 }
-                
-                
-                
+                ExcelRange rng = excelWorksheet2.Cells[1,1,sheet2Data.Count()+1,8];
+                ExcelTable table = excelWorksheet2.Tables.Add(rng,"table");
+
+                ExcelRange rng1 = excelWorksheet1.Cells[1, 1, cellData.Count() + 1, 4];
+                ExcelTable table1 = excelWorksheet1.Tables.Add(rng1, "main-table");
+
+                table1.Columns[0].Name = "Offense Type";
+                table1.Columns[1].Name = "Total Notes";
+                table1.Columns[2].Name = "Percent of Notes";
+                table1.Columns[3].Name = "Number tagged as Closed";
+
+                table.Columns[0].Name = "Offense Type";
+                table.Columns[1].Name = "Offense Number";
+                table.Columns[2].Name = "Remedy INC";
+                table.Columns[3].Name = "Tag";
+                table.Columns[4].Name = "Day Started";
+                table.Columns[5].Name = "Last Edited";
+                table.Columns[6].Name = "Process Time (In Hours)";
+                table.Columns[7].Name = "Process Time (In Days)";
 
                 var myChart = excelWorksheet1.Drawings.AddChart("chart", OfficeOpenXml.Drawing.Chart.eChartType.Pie);
-                var chart2 = excelWorksheet1.Drawings.AddChart("chart2", OfficeOpenXml.Drawing.Chart.eChartType.ColumnStacked);
+                var chart2 = excelWorksheet1.Drawings.AddChart("chart2", OfficeOpenXml.Drawing.Chart.eChartType.ColumnClustered);
 
                 var series = myChart.Series.Add("B2:B" + tagged, "A2: A" + tagged);
                 var series2 = chart2.Series.Add("D2:D" + tagged, "A2: A" + tagged);
+                var series3 = chart2.Series.Add("B2:B" + tagged, "A2: A" + tagged);
 
                 myChart.Border.Fill.Color = System.Drawing.Color.Green;
                 myChart.Title.Text = "Break Down of Current Types";
-                myChart.SetSize(tagged * 22);
+                myChart.SetSize(1200, 650);
                 myChart.SetPosition(1, 0, 6, 0);
                 
                 
                 chart2.Border.Fill.Color = System.Drawing.Color.Green;
-                chart2.SetSize(tagged*22);
-                chart2.Title.Text = "Closed Offenses";
+                chart2.SetSize(1000,500);
+                chart2.Title.Text = "Closed Offenses vs Total Offenses";
                 chart2.Legend.Remove();
-                chart2.SetPosition((tagged*3+1), 0, 6, 0);
+                chart2.SetPosition((tagged*2-5), 0, 6, 0);
 
-                FileInfo excelFile = new FileInfo(username + @"\Documents\H.T I.R Aide\Notes\testbook.xlsx");
+                FileInfo excelFile = new FileInfo(username + @"\Documents\H.T I.R Aide\Metrics\Metrics run "+DateTime.Now.ToString("MM.dd.yy")+" at "+DateTime.Now.ToString("hh.mm") + ".xlsx");
                 excel.SaveAs(excelFile);
+                
+               
+                
             }
+
         }
     }
 }
