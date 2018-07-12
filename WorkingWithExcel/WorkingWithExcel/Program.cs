@@ -160,7 +160,7 @@ namespace ConsoleApp2
 
                 var headerSheet2 = new List<string[]>()
                 {
-                    new string[] { "Offense Type", "Offense Number", "Remedy INC","Tag","Day Started","Last Edited","Process Time (In Hours)", "Process Time (In Days)" }
+                    new string[] { "Offense Type", "Offense Number", "Remedy INC","Tag","Number of Events","Day Started","Last Edited","Process Time (In Hours)", "Process Time (In Days)" }
                 };
 
                 var cellData = new List<object[]>()
@@ -269,7 +269,11 @@ namespace ConsoleApp2
                             {
                                 
                                 List<string> checkclosed = new List<string>(File.ReadAllLines(file));                                
-                                IEnumerable<string> inc = checkclosed.Where(i=>i.Length==15&&i.Contains("INC"));                               
+                                IEnumerable<string> inc = checkclosed.Where(i=>i.Length==15&&i.Contains("INC"));
+                                IEnumerable<string> eventnum = checkclosed.Where(i => i.Length > 6 && i.Length < 25 && i.Contains("events"));
+                                string evnn = string.Join("", eventnum.ToArray());
+                                string evennum = string.Concat(evnn.Reverse().Skip(7).Reverse());
+                                double.TryParse(evennum, out double numeven);                                
                                 if (checkclosed.Contains("y, closed successfully")|| checkclosed.Contains("y, moved to level 2 or inactive"))
                                 {
                                     string newname = (Path.GetFullPath(file).Replace(".txt", ""));
@@ -289,7 +293,7 @@ namespace ConsoleApp2
                                         days = 1;
                                     }
                                     string t = time.TotalHours.ToString("##.##");
-                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), inc, tag, bd, ed, t,days });
+                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), inc, tag, numeven,createdate, editdate, t,days });
                                     
 
 
@@ -315,7 +319,7 @@ namespace ConsoleApp2
                                     }
                                     
                                     string t = (time.TotalHours.ToString("##.##")+" - Still Working");
-                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), inc, tag, bd, ed, t,days });
+                                    sheet2Data.Add(new object[] { name, Path.GetFileNameWithoutExtension(newname), inc, tag, numeven, createdate, editdate, t,days });
 
 
                                 }
@@ -369,7 +373,7 @@ namespace ConsoleApp2
                     }
                    
                 }
-                ExcelRange rng = excelWorksheet2.Cells[1,1,sheet2Data.Count()+1,8];
+                ExcelRange rng = excelWorksheet2.Cells[1,1,sheet2Data.Count()+1,9];
                 ExcelTable table = excelWorksheet2.Tables.Add(rng,"table");
 
                 ExcelRange rng1 = excelWorksheet1.Cells[1, 1, cellData.Count() + 1, 4];
@@ -384,13 +388,14 @@ namespace ConsoleApp2
                 table.Columns[1].Name = "Offense Number";
                 table.Columns[2].Name = "Remedy INC";
                 table.Columns[3].Name = "Tag";
-                table.Columns[4].Name = "Day Started";
-                table.Columns[5].Name = "Last Edited";
-                table.Columns[6].Name = "Process Time (In Hours)";
-                table.Columns[7].Name = "Process Time (In Days)";
+                table.Columns[4].Name = "Number of Events";
+                table.Columns[5].Name = "Day Started";
+                table.Columns[6].Name = "Last Edited";
+                table.Columns[7].Name = "Process Time (In Hours)";
+                table.Columns[8].Name = "Process Time (In Days)";
 
                 var myChart = excelWorksheet1.Drawings.AddChart("chart", OfficeOpenXml.Drawing.Chart.eChartType.Pie);
-                var chart2 = excelWorksheet1.Drawings.AddChart("chart2", OfficeOpenXml.Drawing.Chart.eChartType.ColumnClustered);
+                var chart2 = excelWorksheet1.Drawings.AddChart("chart2", OfficeOpenXml.Drawing.Chart.eChartType.BarClustered);
 
                 var series = myChart.Series.Add("B2:B" + tagged, "A2: A" + tagged);
                 var series2 = chart2.Series.Add("D2:D" + tagged, "A2: A" + tagged);
@@ -399,14 +404,17 @@ namespace ConsoleApp2
                 myChart.Border.Fill.Color = System.Drawing.Color.Green;
                 myChart.Title.Text = "Break Down of Current Types";
                 myChart.SetSize(1200, 650);
-                myChart.SetPosition(1, 0, 6, 0);
-                
-                
+                chart2.SetPosition(1, 0, 6, 0);
+
+               
                 chart2.Border.Fill.Color = System.Drawing.Color.Green;
                 chart2.SetSize(1000,500);
                 chart2.Title.Text = "Closed Offenses vs Total Offenses";
-                chart2.Legend.Remove();
-                chart2.SetPosition((tagged*2-5), 0, 6, 0);
+                chart2.Series[1].Header = "Note Type Total";
+                chart2.Series[0].Header = "Note Type Closed";
+
+                 myChart.SetPosition((tagged*2-5), 0, 6, 0);
+                chart2.Legend.Add();
 
                 FileInfo excelFile = new FileInfo(username + @"\Documents\H.T I.R Aide\Metrics\Metrics run "+DateTime.Now.ToString("MM.dd.yy")+" at "+DateTime.Now.ToString("hh.mm") + ".xlsx");
                 excel.SaveAs(excelFile);
